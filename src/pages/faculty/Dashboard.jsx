@@ -30,7 +30,7 @@ export default function FacultyDashboard() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="stat-card card-hover">
             <p className="section-label">My Assignments</p>
             <p className="font-display text-3xl font-700 text-white mt-1">{assignments.length}</p>
@@ -51,7 +51,7 @@ export default function FacultyDashboard() {
         {/* Quick actions */}
         <div>
           <p className="section-label mb-3">Quick Actions</p>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { to: '/create-assignment', label: 'Create Assignment', desc: 'Post a new assignment' },
               { to: '/manage-assignments', label: 'Manage', desc: 'Edit or delete assignments' },

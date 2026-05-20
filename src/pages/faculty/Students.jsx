@@ -24,7 +24,7 @@ export default function Students() {
   return (
     <Layout title="Students">
       <div className="max-w-4xl space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 className="font-display text-xl font-700 text-white">Students</h2>
             <p className="text-ink-3 text-sm mt-0.5 font-body">{students.length} registered</p>
@@ -32,7 +32,7 @@ export default function Students() {
           <input
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="input-base w-56 py-2"
+            className="input-base sm:w-56 py-2"
             placeholder="Search students..."
           />
         </div>
@@ -44,7 +44,7 @@ export default function Students() {
             <p className="text-ink-3 font-body">No students found.</p>
           </div>
         ) : (
-          <div className="card overflow-hidden">
+          <div className="card overflow-x-auto">
             <table className="data-table">
               <thead>
                 <tr>

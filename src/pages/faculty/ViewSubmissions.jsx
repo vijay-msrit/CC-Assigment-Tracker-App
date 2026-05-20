@@ -135,7 +135,7 @@ export default function ViewSubmissions() {
           <p className="text-ink-3 text-sm mt-0.5 font-body">Select an assignment to view student submissions</p>
         </div>
 
-        <div className="grid grid-cols-[240px,1fr] gap-5 items-start">
+        <div className="flex flex-col md:grid md:grid-cols-[240px,1fr] gap-5 items-start">
           {/* Assignment selector */}
           <div className="card p-1">
             <p className="section-label px-3 py-2">My Assignments</p>
@@ -191,7 +191,7 @@ export default function ViewSubmissions() {
                 <p className="text-ink-3 font-body text-sm">No submissions yet for this assignment.</p>
               </div>
             ) : (
-              <div className="card overflow-hidden">
+              <div className="card overflow-x-auto">
                 <table className="data-table">
                   <thead>
                     <tr>

@@ -43,7 +43,7 @@ export default function SubmissionHistory() {
             <p className="text-ink-3 font-body">No submissions yet.</p>
           </div>
         ) : (
-          <div className="card overflow-hidden">
+          <div className="card overflow-x-auto">
             <table className="data-table">
               <thead>
                 <tr>

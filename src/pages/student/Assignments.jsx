@@ -124,13 +124,13 @@ export default function StudentAssignments() {
       {selected && <UploadModal assignment={selected} onClose={() => setSelected(null)} onSuccess={load} />}
 
       <div className="max-w-4xl space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <h2 className="font-display text-xl font-700 text-white">Assignments</h2>
             <p className="text-ink-3 text-sm mt-0.5 font-body">{assignments.length} total</p>
           </div>
           {/* Tabs */}
-          <div className="flex bg-surface border border-border rounded-lg p-1 gap-0.5">
+          <div className="flex bg-surface border border-border rounded-lg p-1 gap-0.5 self-start sm:self-auto">
             {tabs.map(t => (
               <button key={t.key} onClick={() => setFilter(t.key)}
                 className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all duration-150 ${

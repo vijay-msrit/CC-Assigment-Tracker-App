@@ -1,4 +1,5 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { NavLink, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import toast from 'react-hot-toast'
 
@@ -57,6 +58,11 @@ const IconStudents = () => (
     <path d="M11.5 7a2 2 0 100-4M15 13c0-2.2-1.6-3.5-3.5-3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 )
+const IconClose = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
 
 const studentNav = [
   { to: '/dashboard', icon: <IconGrid />, label: 'Dashboard' },
@@ -74,7 +80,34 @@ const facultyNav = [
   { to: '/profile', icon: <IconUser />, label: 'Profile' },
 ]
 
-export default function Sidebar() {
+// Mobile top bar shown on small screens
+export function MobileTopBar({ onOpen, title }) {
+  return (
+    <header className="md:hidden h-12 border-b border-border flex items-center justify-between px-4 shrink-0 bg-[#080808] sticky top-0 z-30">
+      <button
+        id="sidebar-open-btn"
+        onClick={onOpen}
+        className="p-1.5 rounded-lg text-ink-3 hover:text-white hover:bg-surface transition-all"
+        aria-label="Open menu"
+      >
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+      </button>
+      <div className="flex items-center gap-2">
+        <div className="w-5 h-5 rounded-md bg-gradient-to-br from-accent to-accent-dim flex items-center justify-center">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none">
+            <path d="M2 3h10M2 7h7M2 11h8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+          </svg>
+        </div>
+        <span className="font-display font-700 text-sm tracking-tight text-white">Tracker</span>
+      </div>
+      <div className="w-8" />
+    </header>
+  )
+}
+
+export default function Sidebar({ isOpen, onClose }) {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
   const nav = user?.role === 'FACULTY' ? facultyNav : studentNav
@@ -85,49 +118,82 @@ export default function Sidebar() {
     navigate('/login')
   }
 
+  const handleNavClick = () => {
+    // Close sidebar on mobile when a link is clicked
+    if (onClose) onClose()
+  }
+
   return (
-    <aside className="w-[220px] min-h-screen bg-[#080808] border-r border-border flex flex-col shrink-0">
-      {/* Logo */}
-      <div className="px-4 py-5 border-b border-border">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-accent to-accent-dim flex items-center justify-center">
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M2 3h10M2 7h7M2 11h8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+    <>
+      {/* Mobile backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-40 md:hidden"
+          onClick={onClose}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Sidebar panel */}
+      <aside
+        className={`
+          fixed top-0 left-0 h-full z-50 w-[220px] bg-[#080808] border-r border-border flex flex-col shrink-0
+          transition-transform duration-300 ease-in-out
+          md:static md:translate-x-0 md:z-auto
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}
+      >
+        {/* Logo */}
+        <div className="px-4 py-5 border-b border-border flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-accent to-accent-dim flex items-center justify-center">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <path d="M2 3h10M2 7h7M2 11h8" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <span className="font-display font-700 text-sm tracking-tight text-white">Tracker</span>
           </div>
-          <span className="font-display font-700 text-sm tracking-tight text-white">Tracker</span>
-        </div>
-      </div>
-
-      {/* Nav */}
-      <nav className="flex-1 p-3 space-y-0.5">
-        <p className="section-label px-3 pt-1 pb-2">Navigation</p>
-        {nav.map(item => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+          {/* Close button - mobile only */}
+          <button
+            onClick={onClose}
+            className="md:hidden p-1 rounded-lg text-ink-3 hover:text-white hover:bg-surface transition-all"
+            aria-label="Close menu"
           >
-            {item.icon}
-            <span className="font-body text-sm">{item.label}</span>
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* User footer */}
-      <div className="p-3 border-t border-border">
-        <div className="px-3 py-2.5 mb-1">
-          <p className="text-sm text-white font-medium truncate leading-tight">{user?.name}</p>
-          <p className="text-xs text-ink-3 truncate mt-0.5">{user?.email}</p>
-          <span className={`badge mt-2 ${user?.role === 'FACULTY' ? 'badge-faculty' : 'badge-student'}`}>
-            {user?.role}
-          </span>
+            <IconClose />
+          </button>
         </div>
-        <button onClick={handleLogout} className="nav-item text-danger/70 hover:text-danger hover:bg-danger/5 w-full">
-          <IconLogout />
-          <span className="font-body text-sm">Logout</span>
-        </button>
-      </div>
-    </aside>
+
+        {/* Nav */}
+        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+          <p className="section-label px-3 pt-1 pb-2">Navigation</p>
+          {nav.map(item => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={handleNavClick}
+              className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+            >
+              {item.icon}
+              <span className="font-body text-sm">{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* User footer */}
+        <div className="p-3 border-t border-border">
+          <div className="px-3 py-2.5 mb-1">
+            <p className="text-sm text-white font-medium truncate leading-tight">{user?.name}</p>
+            <p className="text-xs text-ink-3 truncate mt-0.5">{user?.email}</p>
+            <span className={`badge mt-2 ${user?.role === 'FACULTY' ? 'badge-faculty' : 'badge-student'}`}>
+              {user?.role}
+            </span>
+          </div>
+          <button onClick={handleLogout} className="nav-item text-danger/70 hover:text-danger hover:bg-danger/5 w-full">
+            <IconLogout />
+            <span className="font-body text-sm">Logout</span>
+          </button>
+        </div>
+      </aside>
+    </>
   )
 }

@@ -102,7 +102,7 @@ export default function ManageAssignments() {
       {editing && <EditModal assignment={editing} onClose={() => setEditing(null)} onSuccess={load} />}
 
       <div className="max-w-5xl space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-xl font-700 text-white">My Assignments</h2>
             <p className="text-ink-3 text-sm mt-0.5 font-body">{assignments.length} total</p>
@@ -121,7 +121,7 @@ export default function ManageAssignments() {
             <Link to="/create-assignment" className="btn-primary inline-flex">Create your first</Link>
           </div>
         ) : (
-          <div className="card overflow-hidden">
+          <div className="card overflow-x-auto">
             <table className="data-table">
               <thead>
                 <tr>
